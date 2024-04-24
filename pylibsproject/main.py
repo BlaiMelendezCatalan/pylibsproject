@@ -1,8 +1,8 @@
-from fastapi import FastAPI, HTTPException
 from typing import List
 
-from .item import Item
+from fastapi import FastAPI, HTTPException
 
+from .item import Item
 
 app = FastAPI()
 
@@ -24,7 +24,7 @@ def get_item(item_id: int) -> Item:
 
 @app.get("/items/")
 def list_items(offset: int, limit: int = 10) -> List[Item]:
-    return items[offset: limit]
+    return items[offset:limit]
 
 
 @app.put("/items/")
