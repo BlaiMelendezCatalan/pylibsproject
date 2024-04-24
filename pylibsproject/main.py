@@ -1,20 +1,13 @@
 from fastapi import FastAPI, HTTPException
-from pydantic import BaseModel
-from typing import Union, List
+from typing import List
+
+from .item import Item
 
 
 app = FastAPI()
 
 
-class Item(BaseModel):
-    name: str
-    price: Union[int, float]
-
-
 items = []
-items.append(Item(name='Apple', price='0.25'))
-items.append(Item(name='Orange', price='0.3'))
-items.append(Item(name='Banana', price='0.2'))
 
 
 @app.get("/")
@@ -35,5 +28,5 @@ def list_items(offset: int, limit: int = 10) -> List[Item]:
 
 
 @app.put("/items/")
-def create_item(item_id: int, item: Item) -> None:
-    items.insert(item_id, item)
+def create_item(item: Item) -> None:
+    items.append(item)
