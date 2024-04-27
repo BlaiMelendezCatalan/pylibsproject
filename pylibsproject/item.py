@@ -1,5 +1,5 @@
 """Define the Item class."""
-from typing import Union
+from typing import Optional, Union
 
 from pydantic import BaseModel
 
@@ -13,6 +13,8 @@ class Item(BaseModel):
         The name of the item.
     price : int
         The price of the item.
+    available : bool
+        Whether or not the item is available
 
     Examples
     --------
@@ -27,3 +29,4 @@ class Item(BaseModel):
 
     name: str
     price: Union[int, float]
+    available: Optional[bool] = True
