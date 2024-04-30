@@ -1,8 +1,11 @@
 """API to interact with the items."""
+import logging
+import sys
 from typing import List
 
 from fastapi import FastAPI, HTTPException
 
+from .decorators import benchmark
 from .item import Item
 
 app = FastAPI()
@@ -11,7 +14,19 @@ app = FastAPI()
 items = []
 
 
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
+stream_handler = logging.StreamHandler(sys.stdout)
+log_formatter = logging.Formatter(
+    "%(asctime)s [%(processName)s: %(process)d] [%(threadName)s: %(thread)d] "
+    "[%(levelname)s] %(name)s: %(message)s"
+)
+stream_handler.setFormatter(log_formatter)
+logger.addHandler(stream_handler)
+
+
 @app.get("/")
+@benchmark(logger=logger)
 def root() -> dict:
     """Api's root endpoint. Does nothing.
 
@@ -24,6 +39,7 @@ def root() -> dict:
 
 
 @app.get("/items/{item_id}")
+@benchmark(logger=logger)
 def get_item(item_id: int) -> Item:
     """Get an Item given its id.
 
@@ -44,7 +60,8 @@ def get_item(item_id: int) -> Item:
 
 
 @app.get("/items/")
-def list_items(offset: int, limit: int = 10) -> List[Item]:
+@benchmark(logger=logger)
+def list_items(offset: int = 0, limit: int = 10) -> List[Item]:
     """List a number of items.
 
     Parameters
@@ -64,6 +81,7 @@ def list_items(offset: int, limit: int = 10) -> List[Item]:
 
 
 @app.put("/items/")
+@benchmark(logger=logger)
 def create_item(item: Item) -> None:
     """Create a new item.
 
